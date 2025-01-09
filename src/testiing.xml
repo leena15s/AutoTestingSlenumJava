@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="CrossBrowserSuite " parallel="tests" thread-count="3">>
+    <!-- Chrome Test -->
+    <test name="GoogleTest-Chrome">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="Project.CrossBrowserTest.GoogleCrossBrowserTest"/>
+            <method>
+                <method name='testGoogleWebsite'> </method>
+                <parameter name="browser" value="chrome"/>
+            </method>
+        </classes>
+    </test>
+
+    <!-- Firefox Test -->
+    <test name="GoogleTest-Firefox">
+        <parameter name="browser" value="firefox"/>
+        <classes>
+            <class name="Project.CrossBrowserTest.GoogleCrossBrowserTest"/>
+        </classes>
+    </test>
+
+    <!-- Edge Test -->
+    <test name="GoogleTest-Edge">
+        <parameter name="browser" value="edge"/>
+        <classes>
+            <class name="Project.CrossBrowserTest.GoogleCrossBrowserTest"/>
+        </classes>
+    </test>
+</suite>
