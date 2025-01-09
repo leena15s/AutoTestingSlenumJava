@@ -1,0 +1,17 @@
+{
+
+
+  "SwagLabsTestData": {
+    "username": "standard_user",
+    "password": "secret_sauce",
+    "invalidusername" : "Leena",
+    "invalidpassword": "Leenapassword",
+    "emptyuser": "",
+    "emptypassword": "",
+    "firstName": "Leena",
+    "lastName": "Almutairi",
+    "zipCode": "305"
+  }
+}
+
+
