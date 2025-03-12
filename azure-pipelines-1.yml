@@ -4,11 +4,12 @@ trigger:
 pool: agent3
 
 steps:
-# 1. Install Java (JDK 11 or JDK 21, based on your project needs) using the Java Tool Installer task.
-- task: UseJavaToolInstaller@0
-  inputs:
-    versionSpec: '21'  # Use Java 21, replace '21' with '11' if you want to use JDK 11
-    jdkArchitecture: 'x64'  # Specify 64-bit JDK (This is the correct parameter name, not 'jdkArchitectureOption')
+# 1. Install Java (JDK 21 or 11) manually using apt-get.
+- script: |
+    sudo apt update
+    sudo apt install -y openjdk-21-jdk  # Install Java 21. Change this to openjdk-11-jdk for Java 11.
+    java -version  # Verify Java version
+  displayName: 'Install Java 21'
 
 # 2. Run the Maven build (including tests).
 - task: Maven@4  # Use Maven task version 4.
