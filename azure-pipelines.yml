@@ -1,32 +1,35 @@
 trigger:
-- main  # Trigger on push to the 'main' branch
+- main  # Change to your desired branch (e.g., main)
 
-pool: agent3
+pool:  agent3
 
 steps:
-# Step 1: Install Java 21 using Java Tool Installer task
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '21'  # Install Java 21. You can also use '11' for Java 11.
-    jdkArchitectureOption: 'x64'  # 64-bit architecture.
-    jdkSourceOption: 'PreInstalled'  # Use a preinstalled JDK version if available.
-    jdkFileSource: 'ToolCache'  # Choose from ToolCache if it's installed from a previous step.
-    jdkHomeOption: 'JAVA_HOME'  # Sets the JAVA_HOME to the installed JDK.
-
-# Step 2: Set JAVA_HOME manually to ensure it's pointing to Java 21 (if necessary)
+# Step 1: Install Java 21 using Chocolatey
 - script: |
-    echo "Setting JAVA_HOME for Java 21"
-    export JAVA_HOME=$(C:/Program\ Files/Java/jdk-21)  # Adjust the installation path of Java 21 accordingly
-    echo "JAVA_HOME set to $JAVA_HOME"
-  displayName: 'Set JAVA_HOME for Java 21'
+    choco install openjdk21 -y  # Install OpenJDK 21 with Chocolatey
+  displayName: 'Install Java 21 on Windows'
 
-# Step 3: Run Maven build (including tests)
+# Step 2: Verify Java Installation
+- script: |
+    java -version  # Verify that Java 21 has been installed successfully
+  displayName: 'Verify Java Version'
+
+# Step 3: Run Maven Build and Tests
 - task: Maven@4  # Use Maven task version 4
   inputs:
     mavenPomFile: 'pom.xml'  # Path to your pom.xml file
-    goals: 'clean install'  # Run Maven goals: clean and install
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Path for test results
-    jdkVersionOption: '1.21'  # Specify JDK 21 (use '1.21' for Java 21)
-    jdkArchitectureOption: 'x64'  # Architecture (use x64 for 64-bit)
-    publishJUnitResults: true  # Publish JUnit test results
-  displayName: 'Run Maven Build with Java 21'
+    goals: 'clean test'  # Run tests after cleaning
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Path for test result files
+    jdkVersionOption: '1.21'  # Specify Java version (1.21 for Java 21)
+    jdkArchitectureOption: 'x64'  # Use 64-bit Java
+    publishJUnitResults: true  # Publish test results
+  displayName: 'Run Maven Build and Tests'
+
+# Step 4: Publish Test Results (Optional but recommended)
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'  # Format used by Maven Surefire
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Path to test result files
+    mergeTestResults: true  # Merge results if there are multiple test result files
+    publishRunAttachments: true  # Publish any attachments from the test run
+  displayName: 'Publish Test Results'
