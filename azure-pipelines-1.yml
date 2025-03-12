@@ -4,12 +4,11 @@ trigger:
 pool: agent3
 
 steps:
-# 1. Install Java (JDK 11) using the Java Tool Installer task.
-- task: JavaToolInstaller@0
+# 1. Install Java (JDK 11 or JDK 21, based on your project needs) using the Java Tool Installer task.
+- task: UseJavaToolInstaller@0
   inputs:
-    versionSpec: '11'  # Specify that we need JDK 11.
-    jdkArchitectureOption: 'x64'  # Specify that we need a 64-bit JDK.
-    jdkSourceOption: 'PreInstalled'  # Use pre-installed JDK from the agent (common for cloud agents).
+    versionSpec: '21'  # Use Java 21, replace '21' with '11' if you want to use JDK 11
+    jdkArchitecture: 'x64'  # Specify 64-bit JDK (This is the correct parameter name, not 'jdkArchitectureOption')
 
 # 2. Run the Maven build (including tests).
 - task: Maven@4  # Use Maven task version 4.
