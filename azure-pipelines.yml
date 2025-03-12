@@ -1,13 +1,16 @@
 trigger:
 - main  # Change to your desired branch (e.g., main)
 
-pool:  agent3
+pool: agen3
 
 steps:
-# Step 1: Install Java 21 using Chocolatey
+# Step 1: Download OpenJDK 21 manually from Adoptium
 - script: |
-    choco install openjdk21 -y  # Install OpenJDK 21 with Chocolatey
-  displayName: 'Install Java 21 on Windows'
+    Invoke-WebRequest -Uri "https://github.com/AdoptOpenJDK/openjdk21/releases/download/jdk-21%2B35/OpenJDK21U-jdk_x64_windows_hotspot_21_35.zip" -OutFile "C:\openjdk21.zip"
+    Expand-Archive -Path "C:\openjdk21.zip" -DestinationPath "C:\OpenJDK"
+    [System.Environment]::SetEnvironmentVariable("JAVA_HOME", "C:\OpenJDK", [System.EnvironmentVariableTarget]::Machine)
+    [System.Environment]::SetEnvironmentVariable("PATH", "$env:PATH;C:\OpenJDK\bin", [System.EnvironmentVariableTarget]::Machine)
+  displayName: 'Install OpenJDK 21 from Adoptium'
 
 # Step 2: Verify Java Installation
 - script: |
