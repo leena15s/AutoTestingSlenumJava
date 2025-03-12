@@ -1,16 +1,22 @@
 trigger:
-- updatedVersion  # Trigger the pipeline when there are updates to the 'updatedVersion' branch.
+- main  # Trigger on push to the 'main' branch
 
 pool: agent3
 
 steps:
-# 1. Install Java (JDK 21 or 11) manually using apt-get.
-- script: |
-    sudo apt update
-    sudo apt install -y openjdk-21-jdk  # Install Java 21. Change this to openjdk-11-jdk for Java 11.
-    java -version  # Verify Java version
-  displayName: 'Install Java 21'
+# Step 1: Install Java 21 using Java Tool Installer (if it's not already installed)
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '21'  # Install Java 21
+    jdkArchitectureOption: 'x64'  # 64-bit architecture
+    jdkSourceOption: 'PreInstalled'  # If Java is already installed, use the pre-installed version
 
+# Step 2: Set JAVA_HOME for Java 21 (just to ensure it's set correctly for Maven)
+- script: |
+    echo "Setting JAVA_HOME for Java 21"
+    export JAVA_HOME=$(C:/Program\ Files/Java/jdk-21)  # Adjust to your actual installation path of Java 21
+    echo "JAVA_HOME set to $JAVA_HOME"
+  displayName: 'Set JAVA_HOME for Java 21'
 
 # Step 3: Run Maven build (including tests)
 - task: Maven@4  # Use Maven task version 4
@@ -22,12 +28,3 @@ steps:
     jdkArchitectureOption: 'x64'  # Architecture (use x64 for 64-bit)
     publishJUnitResults: true  # Publish JUnit test results
   displayName: 'Run Maven Build with Java 21'
-  # 3. Optional: Run a simple one-line script (example of a basic script).
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-# 4. Optional: Run a multi-line script (example of additional tasks).
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
