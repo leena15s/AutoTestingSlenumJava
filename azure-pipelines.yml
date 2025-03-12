@@ -1,7 +1,7 @@
 trigger:
 - main  # Change to your desired branch (e.g., main)
 
-pool: agen3
+pool: agent3
 
 steps:
 # Step 1: Download OpenJDK 21 manually from Adoptium
