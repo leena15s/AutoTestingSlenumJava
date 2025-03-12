@@ -1,24 +1,25 @@
-
 trigger:
-- updatedVersion
+- main  # Trigger on push to the 'main' branch
 
 pool: agent3
 
 steps:
-# 1. Install Java (JDK 11) explicitly using the Java Tool Installer task.
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '11'  # Specify the version of Java you need (in this case, JDK 11).
-    jdkArchitecture: 'x64'  # Specify the architecture (x64).
+  # 1. PowerShell task (inline script)
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'  # Use inline PowerShell script.
+      script: |
+        Write-Host "This is a test message from PowerShell!"
+    displayName: 'Run Inline PowerShell Script'
 
-# 2. Run the Maven build with the correct Java environment.
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'  # Path to your `pom.xml` file
-    mavenOptions: '-Xmx3072m'  # Optional: Set more memory for Maven if needed
-    javaHomeOption: 'JDKVersion'  # Automatically use the JDK installed in the previous step
-    jdkVersionOption: '1.11'  # Specify JDK 11 (this is now ensured by the previous step)
-    jdkArchitectureOption: 'x64'  # Architecture (default is x64)
-    publishJUnitResults: true  # Publish JUnit test results
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Path for test results
-    goals: 'clean install'  # Run the build and tests
+  # 2. Maven build step (example)
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean install'
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    displayName: 'Run Maven Build'
+
+  # 3. Additional steps (if necessary)
+  - script: echo "Hello from a shell script"
+    displayName: 'Run Shell Script'
