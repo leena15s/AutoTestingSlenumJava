@@ -11,19 +11,18 @@ steps:
     java -version  # Verify Java version
   displayName: 'Install Java 21'
 
-# 2. Run the Maven build (including tests).
-- task: Maven@4  # Use Maven task version 4.
-  inputs:
-    mavenPomFile: 'pom.xml'  # Path to your pom.xml file.
-    mavenOptions: '-Xmx3072m'  # Optional: Set more memory for Maven if needed.
-    javaHomeOption: 'JDKVersion'  # Use the JDK installed in the previous step.
-    jdkVersionOption: '1.11'  # Specify JDK version to use (JDK 11).
-    jdkArchitectureOption: 'x64'  # Architecture (default is x64).
-    publishJUnitResults: true  # Publish JUnit test results.
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Path for test results.
-    goals: 'clean install'  # Run the build and tests.
 
-# 3. Optional: Run a simple one-line script (example of a basic script).
+# Step 3: Run Maven build (including tests)
+- task: Maven@4  # Use Maven task version 4
+  inputs:
+    mavenPomFile: 'pom.xml'  # Path to your pom.xml file
+    goals: 'clean install'  # Run Maven goals: clean and install
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Path for test results
+    jdkVersionOption: '1.21'  # Specify JDK 21 (use '1.21' for Java 21)
+    jdkArchitectureOption: 'x64'  # Architecture (use x64 for 64-bit)
+    publishJUnitResults: true  # Publish JUnit test results
+  displayName: 'Run Maven Build with Java 21'
+  # 3. Optional: Run a simple one-line script (example of a basic script).
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
