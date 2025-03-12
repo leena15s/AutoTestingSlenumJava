@@ -1,0 +1,34 @@
+trigger:
+- updatedVersion  # Trigger the pipeline when there are updates to the 'updatedVersion' branch.
+
+pool: agent3
+
+steps:
+# 1. Install Java (JDK 11) using the Java Tool Installer task.
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '11'  # Specify that we need JDK 11.
+    jdkArchitectureOption: 'x64'  # Specify that we need a 64-bit JDK.
+    jdkSourceOption: 'PreInstalled'  # Use pre-installed JDK from the agent (common for cloud agents).
+
+# 2. Run the Maven build (including tests).
+- task: Maven@4  # Use Maven task version 4.
+  inputs:
+    mavenPomFile: 'pom.xml'  # Path to your pom.xml file.
+    mavenOptions: '-Xmx3072m'  # Optional: Set more memory for Maven if needed.
+    javaHomeOption: 'JDKVersion'  # Use the JDK installed in the previous step.
+    jdkVersionOption: '1.11'  # Specify JDK version to use (JDK 11).
+    jdkArchitectureOption: 'x64'  # Architecture (default is x64).
+    publishJUnitResults: true  # Publish JUnit test results.
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Path for test results.
+    goals: 'clean install'  # Run the build and tests.
+
+# 3. Optional: Run a simple one-line script (example of a basic script).
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+# 4. Optional: Run a multi-line script (example of additional tasks).
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
