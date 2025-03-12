@@ -1,46 +1,22 @@
-# trigger:
-# - main  # Trigger on push to the 'main' branch
-
-# pool: agent3
-
-# steps:
-#   # 1. PowerShell task (inline script)
-#   - task: PowerShell@2
-#     inputs:
-#       targetType: 'inline'  # Use inline PowerShell script.
-#       script: |
-#         Write-Host "This is a test message from PowerShell!"
-#     displayName: 'Run Inline PowerShell Script'
-
-#   # 2. Maven build step (example)
-#   - task: Maven@3
-#     inputs:
-#       mavenPomFile: 'pom.xml'
-#       goals: 'clean install'
-#       testResultsFiles: '**/surefire-reports/TEST-*.xml'
-#     displayName: 'Run Maven Build'
-
-#   # 3. Additional steps (if necessary)
-#   - script: echo "Hello from a shell script"
-#     displayName: 'Run Shell Script'
 trigger:
 - main  # Trigger on push to the 'main' branch
 
 pool: agent3
- 
 
 steps:
-# Step 1: Install Java 21 using Java Tool Installer (if it's not already installed)
+# Step 1: Install Java 21 using Java Tool Installer task
 - task: JavaToolInstaller@0
   inputs:
-    versionSpec: '21'  # Install Java 21
-    jdkArchitectureOption: 'x64'  # 64-bit architecture
-    jdkSourceOption: 'PreInstalled'  # If Java is already installed, use the pre-installed version
+    versionSpec: '21'  # Install Java 21. You can also use '11' for Java 11.
+    jdkArchitectureOption: 'x64'  # 64-bit architecture.
+    jdkSourceOption: 'PreInstalled'  # Use a preinstalled JDK version if available.
+    jdkFileSource: 'ToolCache'  # Choose from ToolCache if it's installed from a previous step.
+    jdkHomeOption: 'JAVA_HOME'  # Sets the JAVA_HOME to the installed JDK.
 
-# Step 2: Set JAVA_HOME for Java 21 (just to ensure it's set correctly for Maven)
+# Step 2: Set JAVA_HOME manually to ensure it's pointing to Java 21 (if necessary)
 - script: |
     echo "Setting JAVA_HOME for Java 21"
-    export JAVA_HOME=$(C:/Program\ Files/Java/jdk-21)  # Adjust to your actual installation path of Java 21
+    export JAVA_HOME=$(C:/Program\ Files/Java/jdk-21)  # Adjust the installation path of Java 21 accordingly
     echo "JAVA_HOME set to $JAVA_HOME"
   displayName: 'Set JAVA_HOME for Java 21'
 
