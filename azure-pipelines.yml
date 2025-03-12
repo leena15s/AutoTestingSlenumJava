@@ -6,8 +6,7 @@
 trigger:
 - updatedVersion
 
-pool:
-  vmImage: ubuntu-latest
+pool: agent3
 
 steps:
 - task: Maven@3
